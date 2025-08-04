@@ -12,7 +12,7 @@ const Form = () => {
     const [lensCost, setLensCost] = useState('');
     const [droneCost, setDroneCost] = useState('');
     const [otherExpenses, setOtherExpenses] = useState('');
-    const [profitMargin, setProfitMargin] = useState('20');
+    const [profitMargin, setProfitMargin] = useState('');
 
     const ESTIMATED_USES = 100;
 
@@ -32,7 +32,7 @@ const Form = () => {
             totalHours: totalHours,
             totalEquipmentCost: totalEquipmentCost,
             otherExpenses: parseFloat(otherExpenses),
-            profitMargin: parseFloat(profitMargin)
+            profitMargin: parseFloat(profitMargin) || 20 // Use a default of 20 if the field is empty
         };
         navigate('/summary', { state });
     };
@@ -143,7 +143,7 @@ const Form = () => {
                                 type="number"
                                 value={profitMargin}
                                 onChange={(e) => setProfitMargin(e.target.value)}
-                                required
+                                placeholder="e.g., 20"
                             />
                         </label>
                         <p className="guidance">

@@ -13,10 +13,10 @@ const Welcome = () => {
         <div className="welcome-container">
             <h1 className="welcome-title">Welcome to the Photo Pricing App</h1>
             <p className="welcome-subtitle">
-                Your guide to fair and competitive pricing for your photography sessions.
+                Your ultimate guide to fair and competitive pricing for your photography sessions.
             </p>
             <button onClick={handleStartSession} className="welcome-button">
-                Start New Session
+                Start Calculating
             </button>
         </div>
     );
