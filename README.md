@@ -1,4 +1,4 @@
-# Photo Pricer App
+# Photo Pricer
 
 A simple and intuitive tool designed to help photographers and freelancers calculate fair and competitive prices for their sessions. This app simplifies the pricing process by consolidating key financial inputs and providing a clear, estimated final price.
 
