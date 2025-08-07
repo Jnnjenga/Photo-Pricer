@@ -1,0 +1,126 @@
+.invoice-container {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+}
+
+.invoice-header h1 {
+    font-size: 2.5em;
+    color: #007aff;
+    margin: 0;
+}
+
+.invoice-header-right p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.invoice-number,
+.invoice-date,
+.invoice-client,
+.invoice-project {
+    font-size: 1em;
+}
+
+.invoice-section {
+    margin-bottom: 30px;
+}
+
+.invoice-section h2 {
+    font-size: 1.5em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.invoice-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-header,
+.table-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.table-header {
+    font-weight: bold;
+    color: #555;
+}
+
+.table-row {
+    font-size: 1em;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.description {
+    flex: 3;
+}
+
+.rate,
+.hours {
+    flex: 1;
+    text-align: right;
+}
+
+.amount {
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
+}
+
+.invoice-costs {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.invoice-summary {
+    margin-top: 50px;
+    width: 50%;
+    margin-left: auto;
+    border-top: 2px solid #555;
+    padding-top: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 1.1em;
+}
+
+.summary-row.final-total {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #007aff;
+    border-top: 2px solid #555;
+    padding-top: 10px;
+    margin-top: 10px;
+}

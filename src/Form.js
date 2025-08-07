@@ -13,6 +13,9 @@ const Form = () => {
     const [droneCost, setDroneCost] = useState(() => localStorage.getItem('droneCost') || '');
     const [serviceTaxRate, setServiceTaxRate] = useState(() => localStorage.getItem('serviceTaxRate') || '');
 
+    // Add state for the pricing model and flat fee
+    const [pricingModel, setPricingModel] = useState('hourly'); // Default to hourly
+    const [flatFee, setFlatFee] = useState('');
 
     // Initialize state with empty strings for session-specific data
     const [preShootHours, setPreShootHours] = useState('');
@@ -20,6 +23,10 @@ const Form = () => {
     const [postShootHours, setPostShootHours] = useState('');
     const [otherExpenses, setOtherExpenses] = useState('');
     const [profitMargin, setProfitMargin] = useState('');
+
+    // New state for client and project details
+    const [clientName, setClientName] = useState('');
+    const [projectName, setProjectName] = useState('');
 
     const ESTIMATED_USES = 100;
 
@@ -54,12 +61,16 @@ const Form = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const state = {
+            pricingModel,
             hourlyRate: parseFloat(hourlyRate) || suggestedHourlyRate,
             totalHours: totalHours,
             totalEquipmentCost: totalEquipmentCost,
             otherExpenses: parseFloat(otherExpenses),
             profitMargin: parseFloat(profitMargin) || 20,
-            serviceTaxRate: parseFloat(serviceTaxRate) || 0
+            serviceTaxRate: parseFloat(serviceTaxRate) || 0,
+            flatFee: parseFloat(flatFee) || 0,
+            clientName,
+            projectName,
         };
         navigate('/summary', { state });
     };
@@ -68,73 +79,148 @@ const Form = () => {
         <div className="main-content">
             <div className="form-container">
                 <form onSubmit={handleSubmit}>
-                    <h2 className="form-title">Session Details</h2>
+                    <h2 className="form-title">Pricing Details</h2>
                     <div className="form-group">
-                        <label>
-                            Select your tier:
-                            <select
-                                value={tier}
-                                onChange={(e) => setTier(e.target.value)}
-                            >
-                                <option value="Beginner">Beginner</option>
-                                <option value="Amateur">Amateur</option>
-                                <option value="Pro">Pro</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <label>
-                            Hourly Rate ($):
-                            <input
-                                type="number"
-                                value={hourlyRate}
-                                onChange={(e) => setHourlyRate(e.target.value)}
-                                placeholder={`e.g., ${suggestedRateRange.min} - ${suggestedRateRange.max}`}
-                                required
-                            />
-                        </label>
-                        <p className="guidance">
-                            The suggested rate for your tier is ${suggestedRateRange.min} - ${suggestedRateRange.max}.
-                        </p>
-                    </div>
-                    <div className="form-group">
-                        <label>Estimated Time (Hours):</label>
-                        <div className="time-inputs">
+                        <label>Select Pricing Model:</label>
+                        <div className="radio-group">
                             <label>
-                                Pre-shoot
                                 <input
-                                    type="number"
-                                    value={preShootHours}
-                                    onChange={(e) => setPreShootHours(e.target.value)}
-                                    placeholder="0"
-                                />
+                                    type="radio"
+                                    value="hourly"
+                                    checked={pricingModel === 'hourly'}
+                                    onChange={() => setPricingModel('hourly')}
+                                /> Hourly
                             </label>
                             <label>
-                                Shoot Time
                                 <input
-                                    type="number"
-                                    value={shootTimeHours}
-                                    onChange={(e) => setShootTimeHours(e.target.value)}
-                                    placeholder="0"
-                                />
-                            </label>
-                            <label>
-                                Post-shoot
-                                <input
-                                    type="number"
-                                    value={postShootHours}
-                                    onChange={(e) => setPostShootHours(e.target.value)}
-                                    placeholder="0"
-                                />
+                                    type="radio"
+                                    value="flat-fee"
+                                    checked={pricingModel === 'flat-fee'}
+                                    onChange={() => setPricingModel('flat-fee')}
+                                /> Flat Fee
                             </label>
                         </div>
-                        <p className="guidance">
-                            These are the total hours for planning, shooting, and editing.
-                        </p>
-                        <p className="total-hours">
-                            Total Hours: <strong>{totalHours}</strong>
-                        </p>
                     </div>
+
+                    <h2 className="form-title">Project Details</h2>
+                    <div className="form-group">
+                        <label>
+                            Client Name:
+                            <input
+                                type="text"
+                                value={clientName}
+                                onChange={(e) => setClientName(e.target.value)}
+                                title="Enter the name of the client for this project."
+                                placeholder="e.g., Jane Doe"
+                            />
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label>
+                            Project Name:
+                            <input
+                                type="text"
+                                value={projectName}
+                                onChange={(e) => setProjectName(e.target.value)}
+                                title="Enter the name of the project."
+                                placeholder="e.g., Wedding Photoshoot"
+                            />
+                        </label>
+                    </div>
+
+                    {pricingModel === 'hourly' ? (
+                        <>
+                            <h2 className="form-title">Session Details</h2>
+                            <div className="form-group">
+                                <label>
+                                    Select your tier:
+                                    <select
+                                        value={tier}
+                                        onChange={(e) => setTier(e.target.value)}
+                                        title="Select your experience tier to see a suggested hourly rate."
+                                    >
+                                        <option value="Beginner">Beginner</option>
+                                        <option value="Amateur">Amateur</option>
+                                        <option value="Pro">Pro</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div className="form-group">
+                                <label>
+                                    Hourly Rate ($):
+                                    <input
+                                        type="number"
+                                        value={hourlyRate}
+                                        onChange={(e) => setHourlyRate(e.target.value)}
+                                        placeholder={`e.g., ${suggestedRateRange.min} - ${suggestedRateRange.max}`}
+                                        title="Enter your hourly rate. This rate will be used to calculate your time cost."
+                                        required
+                                    />
+                                </label>
+                                <p className="guidance">
+                                    The suggested rate for your tier is ${suggestedRateRange.min} - ${suggestedRateRange.max}.
+                                </p>
+                            </div>
+                            <div className="form-group">
+                                <label>Estimated Time (Hours):</label>
+                                <div className="time-inputs">
+                                    <label>
+                                        Pre-shoot
+                                        <input
+                                            type="number"
+                                            value={preShootHours}
+                                            onChange={(e) => setPreShootHours(e.target.value)}
+                                            placeholder="0"
+                                            title="Time spent on communication, planning, and travel before the shoot."
+                                        />
+                                    </label>
+                                    <label>
+                                        Shoot Time
+                                        <input
+                                            type="number"
+                                            value={shootTimeHours}
+                                            onChange={(e) => setShootTimeHours(e.target.value)}
+                                            placeholder="0"
+                                            title="The actual time spent shooting with the client."
+                                        />
+                                    </label>
+                                    <label>
+                                        Post-shoot
+                                        <input
+                                            type="number"
+                                            value={postShootHours}
+                                            onChange={(e) => setPostShootHours(e.target.value)}
+                                            placeholder="0"
+                                            title="Time spent on editing, culling photos, and delivering the final product."
+                                        />
+                                    </label>
+                                </div>
+                                <p className="guidance">
+                                    These are the total hours for planning, shooting, and editing.
+                                </p>
+                                <p className="total-hours">
+                                    Total Hours: <strong>{totalHours}</strong>
+                                </p>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="form-group">
+                            <label>
+                                Flat Fee ($):
+                                <input
+                                    type="number"
+                                    value={flatFee}
+                                    onChange={(e) => setFlatFee(e.target.value)}
+                                    placeholder="e.g., 500"
+                                    title="Enter the total flat fee you will charge for the service."
+                                    required
+                                />
+                            </label>
+                            <p className="guidance">
+                                Enter the total amount you will charge for the service.
+                            </p>
+                        </div>
+                    )}
                     <h2 className="form-title">Equipment Costs</h2>
                     <p className="description">
                         Add the total cost of your gear. The per-session cost will be calculated for you based on an estimated {ESTIMATED_USES} uses.
@@ -147,6 +233,7 @@ const Form = () => {
                                 value={cameraCost}
                                 onChange={(e) => setCameraCost(e.target.value)}
                                 placeholder="e.g., 5000"
+                                title="The total purchase price of your camera body."
                             />
                         </label>
                     </div>
@@ -158,6 +245,7 @@ const Form = () => {
                                 value={lensCost}
                                 onChange={(e) => setLensCost(e.target.value)}
                                 placeholder="e.g., 2500"
+                                title="The total purchase price of all your lenses."
                             />
                         </label>
                     </div>
@@ -169,6 +257,7 @@ const Form = () => {
                                 value={droneCost}
                                 onChange={(e) => setDroneCost(e.target.value)}
                                 placeholder="e.g., 1000"
+                                title="The total purchase price of any other equipment like drones, lighting, or tripods."
                             />
                         </label>
                     </div>
@@ -183,6 +272,7 @@ const Form = () => {
                                 type="number"
                                 value={otherExpenses}
                                 onChange={(e) => setOtherExpenses(e.target.value)}
+                                title="Include costs for travel, permits, location fees, or other miscellaneous items."
                                 required
                             />
                         </label>
@@ -199,6 +289,7 @@ const Form = () => {
                                 value={profitMargin}
                                 onChange={(e) => setProfitMargin(e.target.value)}
                                 placeholder="e.g., 20"
+                                title="Enter the percentage of profit you want to add on top of your total costs."
                             />
                         </label>
                         <p className="guidance">
@@ -213,6 +304,7 @@ const Form = () => {
                                 value={serviceTaxRate}
                                 onChange={(e) => setServiceTaxRate(e.target.value)}
                                 placeholder="e.g., 8.25"
+                                title="Enter the service tax rate for your region. This will be applied to the total price before rounding."
                             />
                         </label>
                         <p className="guidance">
