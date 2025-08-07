@@ -12,6 +12,9 @@ const Form = () => {
     const [lensCost, setLensCost] = useState(() => localStorage.getItem('lensCost') || '');
     const [droneCost, setDroneCost] = useState(() => localStorage.getItem('droneCost') || '');
     const [serviceTaxRate, setServiceTaxRate] = useState(() => localStorage.getItem('serviceTaxRate') || '');
+    const [businessName, setBusinessName] = useState(() => localStorage.getItem('businessName') || '');
+    const [businessContact, setBusinessContact] = useState(() => localStorage.getItem('businessContact') || '');
+    const [businessEmail, setBusinessEmail] = useState(() => localStorage.getItem('businessEmail') || '');
 
     // Add state for the pricing model and flat fee
     const [pricingModel, setPricingModel] = useState('hourly'); // Default to hourly
@@ -48,7 +51,7 @@ const Form = () => {
         Number(droneCost)
     ) / ESTIMATED_USES;
 
-    // Use a single useEffect hook to save only persistent data to local storage
+    // Use a single useEffect hook to save persistent data to local storage
     useEffect(() => {
         localStorage.setItem('hourlyRate', hourlyRate);
         localStorage.setItem('tier', tier);
@@ -56,7 +59,10 @@ const Form = () => {
         localStorage.setItem('lensCost', lensCost);
         localStorage.setItem('droneCost', droneCost);
         localStorage.setItem('serviceTaxRate', serviceTaxRate);
-    }, [hourlyRate, tier, cameraCost, lensCost, droneCost, serviceTaxRate]);
+        localStorage.setItem('businessName', businessName);
+        localStorage.setItem('businessContact', businessContact);
+        localStorage.setItem('businessEmail', businessEmail);
+    }, [hourlyRate, tier, cameraCost, lensCost, droneCost, serviceTaxRate, businessName, businessContact, businessEmail]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -71,6 +77,9 @@ const Form = () => {
             flatFee: parseFloat(flatFee) || 0,
             clientName,
             projectName,
+            businessName,
+            businessContact,
+            businessEmail,
         };
         navigate('/summary', { state });
     };
@@ -79,27 +88,42 @@ const Form = () => {
         <div className="main-content">
             <div className="form-container">
                 <form onSubmit={handleSubmit}>
-                    <h2 className="form-title">Pricing Details</h2>
+                    <h2 className="form-title">Business Details</h2>
                     <div className="form-group">
-                        <label>Select Pricing Model:</label>
-                        <div className="radio-group">
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="hourly"
-                                    checked={pricingModel === 'hourly'}
-                                    onChange={() => setPricingModel('hourly')}
-                                /> Hourly
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="flat-fee"
-                                    checked={pricingModel === 'flat-fee'}
-                                    onChange={() => setPricingModel('flat-fee')}
-                                /> Flat Fee
-                            </label>
-                        </div>
+                        <label>
+                            Business Name:
+                            <input
+                                type="text"
+                                value={businessName}
+                                onChange={(e) => setBusinessName(e.target.value)}
+                                title="Enter your business name."
+                                placeholder="e.g., Jane's Photography"
+                            />
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label>
+                            Contact Number:
+                            <input
+                                type="tel"
+                                value={businessContact}
+                                onChange={(e) => setBusinessContact(e.target.value)}
+                                title="Enter your business contact number."
+                                placeholder="e.g., 555-123-4567"
+                            />
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label>
+                            Email:
+                            <input
+                                type="email"
+                                value={businessEmail}
+                                onChange={(e) => setBusinessEmail(e.target.value)}
+                                title="Enter your business email address."
+                                placeholder="e.g., contact@photography.com"
+                            />
+                        </label>
                     </div>
 
                     <h2 className="form-title">Project Details</h2>
@@ -126,6 +150,29 @@ const Form = () => {
                                 placeholder="e.g., Wedding Photoshoot"
                             />
                         </label>
+                    </div>
+
+                    <h2 className="form-title">Pricing Details</h2>
+                    <div className="form-group">
+                        <label>Select Pricing Model:</label>
+                        <div className="radio-group">
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="hourly"
+                                    checked={pricingModel === 'hourly'}
+                                    onChange={() => setPricingModel('hourly')}
+                                /> Hourly
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="flat-fee"
+                                    checked={pricingModel === 'flat-fee'}
+                                    onChange={() => setPricingModel('flat-fee')}
+                                /> Flat Fee
+                            </label>
+                        </div>
                     </div>
 
                     {pricingModel === 'hourly' ? (
@@ -221,6 +268,7 @@ const Form = () => {
                             </p>
                         </div>
                     )}
+
                     <h2 className="form-title">Equipment Costs</h2>
                     <p className="description">
                         Add the total cost of your gear. The per-session cost will be calculated for you based on an estimated {ESTIMATED_USES} uses.
@@ -264,6 +312,7 @@ const Form = () => {
                     <div className="total-equipment-cost">
                         Calculated Equipment Cost Per Session: <strong>${totalEquipmentCost.toFixed(2)}</strong>
                     </div>
+
                     <h2 className="form-title">Other Costs</h2>
                     <div className="form-group">
                         <label>
@@ -280,6 +329,7 @@ const Form = () => {
                             Include costs for travel, props, permits, or other miscellaneous items.
                         </p>
                     </div>
+
                     <h2 className="form-title">Profit & Taxes</h2>
                     <div className="form-group">
                         <label>
@@ -311,6 +361,7 @@ const Form = () => {
                             Enter the service tax rate for your region. This will be applied to the total price before rounding.
                         </p>
                     </div>
+
                     <div className="button-group">
                         <button type="button" onClick={() => navigate('/')} className="back-button">
                             Back

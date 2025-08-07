@@ -32,6 +32,9 @@ const Summary = () => {
 
         root.render(
             <Invoice
+                businessName={location.state?.businessName}
+                businessContact={location.state?.businessContact}
+                businessEmail={location.state?.businessEmail}
                 clientName={location.state?.clientName}
                 projectName={location.state?.projectName}
                 invoiceNumber={invoiceNumber}
@@ -58,7 +61,7 @@ const Summary = () => {
                     const imgData = canvas.toDataURL('image/png');
                     const pdf = new jsPDF('p', 'mm', 'a4');
                     const imgProps = pdf.getImageProperties(imgData);
-                    const pdfWidth = pdf.internal.pageSize.getWidth() - 16; // 8mm on each side
+                    const pdfWidth = pdf.internal.pageSize.getWidth() - 16;
                     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
                     pdf.addImage(imgData, 'PNG', 8, 8, pdfWidth, pdfHeight);
                     pdf.save("invoice.pdf");
@@ -81,6 +84,9 @@ const Summary = () => {
         flatFee,
         clientName,
         projectName,
+        businessName,
+        businessContact,
+        businessEmail,
     } = location.state || {};
 
     // Check if data is available based on the selected pricing model

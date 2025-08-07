@@ -2,6 +2,9 @@ import React from 'react';
 import './Invoice.css';
 
 const Invoice = ({
+    businessName,
+    businessContact,
+    businessEmail,
     clientName,
     projectName,
     invoiceNumber,
@@ -29,6 +32,12 @@ const Invoice = ({
 
     return (
         <div className="invoice-container">
+            <div className="business-details">
+                {businessName && <h2>{businessName}</h2>}
+                {businessContact && <p>{businessContact}</p>}
+                {businessEmail && <p>{businessEmail}</p>}
+            </div>
+
             <div className="invoice-header">
                 <div className="invoice-header-left">
                     <h1>Invoice</h1>
