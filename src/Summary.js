@@ -49,7 +49,7 @@ const Summary = () => {
                 totalBeforeTax={totalBeforeTax}
                 serviceTaxRate={location.state?.serviceTaxRate}
                 taxAmount={taxAmount}
-                roundedFinalPrice={roundedFinalPrice}
+                finalPrice={finalPrice}
                 flatFee={location.state?.flatFee}
             />
         );
@@ -84,9 +84,6 @@ const Summary = () => {
         flatFee,
         clientName,
         projectName,
-        businessName,
-        businessContact,
-        businessEmail,
     } = location.state || {};
 
     // Check if data is available based on the selected pricing model
@@ -107,7 +104,6 @@ const Summary = () => {
     let profitAmount = 0;
     let totalBeforeTax = 0;
     let finalPrice = 0;
-    let roundedFinalPrice = 0;
     let taxAmount = 0;
 
     // Calculations based on pricing model
@@ -124,12 +120,11 @@ const Summary = () => {
 
     taxAmount = totalBeforeTax * (serviceTaxRate / 100);
     finalPrice = totalBeforeTax + taxAmount;
-    roundedFinalPrice = Math.round(finalPrice / 5) * 5;
 
     // Updated guidance message to be conditional based on pricing model
     const guidanceMessage = pricingModel === 'hourly'
-        ? `This price was calculated by adding your Time Cost, Equipment Cost, and Other Expenses, then adding a ${profitMargin}% profit margin and ${serviceTaxRate}% service tax. The final result was rounded to the nearest $5.`
-        : `This flat fee includes your Equipment Cost, and Other Expenses. The final price was calculated by adding a ${serviceTaxRate}% service tax to the flat fee and rounding to the nearest $5.`;
+        ? `This price was calculated by adding your Time Cost, Equipment Cost, and Other Expenses, then adding a ${profitMargin}% profit margin and ${serviceTaxRate}% service tax.`
+        : `This flat fee includes your Equipment Cost, and Other Expenses. The final price was calculated by adding a ${serviceTaxRate}% service tax to the flat fee.`;
 
     return (
         <div className="main-content">
@@ -199,7 +194,7 @@ const Summary = () => {
 
                 <div className="summary-final">
                     <h3>Your Proposed Price:</h3>
-                    <p className="summary-value">${roundedFinalPrice.toFixed(2)}</p>
+                    <p className="summary-value">${finalPrice.toFixed(2)}</p>
                 </div>
                 <p className="guidance">
                     {guidanceMessage}

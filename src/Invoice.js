@@ -19,7 +19,7 @@ const Invoice = ({
     totalBeforeTax,
     serviceTaxRate,
     taxAmount,
-    roundedFinalPrice,
+    finalPrice,
     flatFee,
 }) => {
     // Determine the current date
@@ -102,7 +102,7 @@ const Invoice = ({
                 </div>
                 <div className="summary-row final-total">
                     <span>Total:</span>
-                    <span>${roundedFinalPrice.toFixed(2)}</span>
+                    <span>${finalPrice.toFixed(2)}</span>
                 </div>
             </div>
         </div>
