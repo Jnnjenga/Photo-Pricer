@@ -10,7 +10,7 @@ const Summary = () => {
         window.print();
     };
 
-    const { hourlyRate, totalHours, totalEquipmentCost, otherExpenses, profitMargin } = location.state || {};
+    const { hourlyRate, totalHours, totalEquipmentCost, otherExpenses, profitMargin, serviceTaxRate } = location.state || {};
 
     if (!hourlyRate || !totalHours || !totalEquipmentCost || otherExpenses === undefined || profitMargin === undefined) {
         return (
@@ -23,33 +23,58 @@ const Summary = () => {
         );
     }
 
+    // Calculations
     const totalTimeCost = hourlyRate * totalHours;
-    const baselineCost = totalTimeCost + totalEquipmentCost + otherExpenses;
-    const finalPrice = baselineCost * (1 + profitMargin / 100);
-    const roundedStandardRate = Math.round(finalPrice / 5) * 5;
+    const subtotalCosts = totalTimeCost + totalEquipmentCost + otherExpenses;
+    const profitAmount = subtotalCosts * (profitMargin / 100);
+    const totalBeforeTax = subtotalCosts + profitAmount;
+    const taxAmount = totalBeforeTax * (serviceTaxRate / 100);
+    const finalPrice = totalBeforeTax + taxAmount;
+    const roundedFinalPrice = Math.round(finalPrice / 5) * 5;
 
     return (
         <div className="main-content">
             <div className="summary-container">
                 <h2>Your Price Estimate</h2>
-                <div className="summary-item">
-                    <h3>Total Time Cost:</h3>
-                    <p className="summary-value">${totalTimeCost.toFixed(2)}</p>
+
+                <div className="detailed-breakdown">
+                    <h3>Invoice Breakdown</h3>
+                    <div className="summary-item">
+                        <p className="summary-label">Time Cost ({totalHours} hours @ ${hourlyRate.toFixed(2)}/hr):</p>
+                        <p className="summary-value">${totalTimeCost.toFixed(2)}</p>
+                    </div>
+                    <div className="summary-item">
+                        <p className="summary-label">Equipment Depreciation:</p>
+                        <p className="summary-value">${totalEquipmentCost.toFixed(2)}</p>
+                    </div>
+                    <div className="summary-item">
+                        <p className="summary-label">Other Expenses:</p>
+                        <p className="summary-value">${otherExpenses.toFixed(2)}</p>
+                    </div>
+                    <div className="summary-item">
+                        <p className="summary-label">Subtotal:</p>
+                        <p className="summary-value">${subtotalCosts.toFixed(2)}</p>
+                    </div>
+                    <div className="summary-item profit-item">
+                        <p className="summary-label">Profit ({profitMargin}%):</p>
+                        <p className="summary-value">${profitAmount.toFixed(2)}</p>
+                    </div>
+                    <div className="summary-item">
+                        <p className="summary-label">Total Before Tax:</p>
+                        <p className="summary-value">${totalBeforeTax.toFixed(2)}</p>
+                    </div>
+                    <div className="summary-item tax-item">
+                        <p className="summary-label">Service Tax ({serviceTaxRate}%):</p>
+                        <p className="summary-value">${taxAmount.toFixed(2)}</p>
+                    </div>
                 </div>
-                <div className="summary-item">
-                    <h3>Total Equipment Cost:</h3>
-                    <p className="summary-value">${totalEquipmentCost.toFixed(2)}</p>
-                </div>
-                <div className="summary-item">
-                    <h3>Total Other Expenses:</h3>
-                    <p className="summary-value">${otherExpenses.toFixed(2)}</p>
-                </div>
+
                 <div className="summary-final">
                     <h3>Your Proposed Price:</h3>
-                    <p className="summary-value">${roundedStandardRate.toFixed(2)}</p>
+                    <p className="summary-value">${roundedFinalPrice.toFixed(2)}</p>
                 </div>
                 <p className="guidance">
-                    This price was calculated by adding your Time Cost, Equipment Cost, and Other Expenses. The total was then multiplied by a {profitMargin}% profit margin, and the final result was rounded to the nearest $5.
+                    This price was calculated by adding your Time Cost, Equipment Cost, and Other Expenses, then adding a {profitMargin}% profit margin and {serviceTaxRate}% service tax. The final result was rounded to the nearest $5.
                 </p>
             </div>
 
