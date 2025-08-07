@@ -13,8 +13,18 @@ const Form = () => {
     const [droneCost, setDroneCost] = useState('');
     const [otherExpenses, setOtherExpenses] = useState('');
     const [profitMargin, setProfitMargin] = useState('');
+    const [tier, setTier] = useState('Beginner');
 
     const ESTIMATED_USES = 100;
+
+    const tierHourlyRates = {
+        'Beginner': { min: 25, max: 100 },
+        'Amateur': { min: 100, max: 200 },
+        'Pro': { min: 200, max: 500 }
+    };
+
+    const suggestedRateRange = tierHourlyRates[tier];
+    const suggestedHourlyRate = suggestedRateRange.min;
 
     const totalHours =
         Number(preShootHours) + Number(shootTimeHours) + Number(postShootHours);
@@ -28,11 +38,11 @@ const Form = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const state = {
-            hourlyRate: parseFloat(hourlyRate),
+            hourlyRate: parseFloat(hourlyRate) || suggestedHourlyRate,
             totalHours: totalHours,
             totalEquipmentCost: totalEquipmentCost,
             otherExpenses: parseFloat(otherExpenses),
-            profitMargin: parseFloat(profitMargin) || 20 // Use a default of 20 if the field is empty
+            profitMargin: parseFloat(profitMargin) || 20
         };
         navigate('/summary', { state });
     };
@@ -44,11 +54,25 @@ const Form = () => {
                     <h2 className="form-title">Session Details</h2>
                     <div className="form-group">
                         <label>
+                            Select your tier:
+                            <select
+                                value={tier}
+                                onChange={(e) => setTier(e.target.value)}
+                            >
+                                <option value="Beginner">Beginner</option>
+                                <option value="Amateur">Amateur</option>
+                                <option value="Pro">Pro</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label>
                             Hourly Rate ($):
                             <input
                                 type="number"
                                 value={hourlyRate}
                                 onChange={(e) => setHourlyRate(e.target.value)}
+                                placeholder={`e.g., ${suggestedRateRange.min} - ${suggestedRateRange.max}`}
                                 required
                             />
                         </label>
@@ -79,7 +103,6 @@ const Form = () => {
                             Total Hours: <strong>{totalHours}</strong>
                         </p>
                     </div>
-
                     <h2 className="form-title">Equipment Costs</h2>
                     <p className="description">
                         Add the total cost of your gear. The per-session cost will be calculated for you.

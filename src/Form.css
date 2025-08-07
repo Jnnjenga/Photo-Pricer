@@ -1,3 +1,4 @@
+/* --- Form Layout and Typography --- */
 .form-title {
     text-align: center;
     color: #2c3e50;
@@ -62,6 +63,7 @@
     color: #007aff;
 }
 
+/* --- Buttons --- */
 .button-group {
     display: flex;
     justify-content: space-between;
@@ -97,4 +99,29 @@
 
 .back-button:hover {
     background-color: #bbb;
+}
+
+/* --- Tier Select Dropdown --- */
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fff;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
 }
